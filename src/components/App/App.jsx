@@ -33,10 +33,14 @@ export class App extends Component {
 
   fetchImages = () => {
     const { query, page } = this.state;
+    const perPage = 12;
+
     this.setState({ loading: true });
 
-    fetchData(query, page)
+    fetchData(query, page, perPage)
       .then(({ hits, totalHits }) => {
+        const totalPages = Math.ceil(totalHits / perPage);
+
         if (hits.length === 0) {
           return toast.error('Sorry, there are no images. Please try again!');
         }
@@ -45,7 +49,7 @@ export class App extends Component {
           toast.success(`Hooray! We found ${totalHits} images.`);
         }
 
-        if (hits.length === totalHits) {
+        if (page === totalPages) {
           toast.info("You've reached the end of search results.");
         }
 
